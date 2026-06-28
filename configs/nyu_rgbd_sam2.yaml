@@ -1,0 +1,84 @@
+DEVICE          : cuda
+SAVE_DIR        : 'output/NYU/'
+
+DATASET:
+  NAME          : NYU
+  ROOT          : '/media/yajing/xishu HD/datasets_0/depth/NYUDepthV2'
+  IGNORE_LABEL  : 255
+  MODALS        : ['img', 'depth']
+
+MODALITIES:
+  img:
+    VFM_TYPE         : 'sam2'
+    SAM2_CFG: 'configs/sam2/sam2_hiera_b+.yaml'
+    SAM2_CKPT: 'ckpt/sam2_hiera_base_plus.pt'
+    SAM2_FEATURE_LEVEL: -1
+    PATCH_SIZE       : 16
+    R                : 32
+    EMB_DIM          : 256
+    IN_CHANNELS      : 3
+    LORA_WEIGHTS     : ''
+
+  depth:
+    VFM_TYPE         : 'sam2'
+    SAM2_CFG: 'configs/sam2/sam2_hiera_b+.yaml'
+    SAM2_CKPT: 'ckpt/sam2_hiera_base_plus.pt'
+    SAM2_FEATURE_LEVEL: -1
+    PATCH_SIZE       : 16
+    R                : 32
+    EMB_DIM          : 256
+    IN_CHANNELS      : 3
+    LORA_WEIGHTS     : 'output/PSST_sam2_Depth/s1_lora_depth.pt'
+
+
+TRAIN:
+  EXP_NAME      : 'NYU_RGBD_SAM2'
+  IMAGE_SIZE    : [1024, 1024]
+  BATCH_SIZE    : 4
+  EPOCHS        : 300
+  EVAL_START    : 50
+  EVAL_INTERVAL : 1
+  AMP           : false
+  DDP           : false
+  NUM_WORKERS   : 8
+  NUM_EXPERTS   : 5
+  EXPERT_HIDDEN_DIM : 512  #1024
+  PROMPT_LENGTH : 10
+  FUSION_LAYERS : [0, 1, 2, 3]
+  PROMPT_LAYERS : []
+  SAM2_PROMPT_LAYERS : all
+  # [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+  N_CLASSES     : 40
+  VP_LR         : 3.5e-4
+  MOE_LR        : 3.5e-4
+  DEC_LR        : 3.5e-4
+  MIN_LR_RATIO  : 0.01
+
+LOSS:
+  NAME          : CrossEntropy
+  CLS_WEIGHTS   : false
+
+OPTIMIZER:
+  NAME          : adamw
+  LR            : 3.5e-4
+  WEIGHT_DECAY  : 0.01
+
+SCHEDULER:
+  NAME          : warmuppolylr
+  POWER         : 0.9
+  WARMUP        : 10
+  WARMUP_RATIO  : 0.1
+
+EVAL:
+  IMAGE_SIZE    : [1024, 1024]
+  BATCH_SIZE    : 2
+  MSF:
+    ENABLE      : false
+    FLIP        : true
+    SCALES      : [0.5, 0.75, 1.0, 1.25, 1.5, 1.75]
+
+TEST:
+  MODEL_PATH    : '/home/yajing/code/modality_adaptation_sam2/output/NYU/NYU_RGBD_SAM2_602000.pt'
+  FILE          : '/media/yajing/xishu HD/datasets_0/depth/NYUDepthV2'
+  IMAGE_SIZE    : [1024, 1024]
+  OVERLAY       : false

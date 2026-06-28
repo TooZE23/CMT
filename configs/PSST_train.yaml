@@ -1,0 +1,50 @@
+EXP_NAME: 'PSST_sam2_Depth'
+DDP: false
+AMP: false
+R: 32
+SIZE: 'base'
+VFM_TYPE: 'sam2'
+SAM2_CFG: 'configs/sam2/sam2_hiera_b+.yaml'
+SAM2_CKPT: 'ckpt/sam2_hiera_base_plus.pt'
+SAM2_FEATURE_LEVEL: -2
+IMG_DIM: [1024, 1024]
+CHANNEL_NUM: 3
+LORA_WEIGHTS: 'output/PSST_warm_sam2_Depth/s1_lora_depth.pt'
+STAGE1_MAE_WEIGHTS: 'output/PSST_warm_sam2_Depth/s1_lora_depth.pt'
+DATASET: 'ade20k'
+DATASET_ROOT: '/root/autodl-tmp/depth'
+EPOCHS: 80
+BATCH_SIZE: 12
+NUM_WORKERS: 12
+OPTIMIZER:
+  NAME          : adamw
+  LR            : 3.0e-4
+  WEIGHT_DECAY  : 0.01
+SCHEDULER:
+  NAME          : warmuppolylr
+  POWER         : 0.9
+  WARMUP        : 10
+  WARMUP_RATIO  : 0.1
+PROJ_DIM: 256
+TEACHER_TEMP: 0.07
+CENTER_M: 0.9
+EMA_M: 0.996
+W_DINO: 1.0
+W_IBOT: 1.0
+W_KOLEO: 1.0
+W_MAE: 0.5
+VAL_EVERY: 5
+SAVE_EVERY: 5
+MASK_SAMPLE_PROBABILITY: 0.5
+MASK_RATIO_MIN_MAX: [0.1, 0.6]
+MAE_MASK_RATIO: 0.75
+MAE_FILTER_BATCH_SIZE: 32
+MAE_FILTER_THRESHOLD: null
+MAE_FILTER_TOP_RATIO: 0.70
+MAE_FILTER_CACHE_FILE: 'output/PSST_sam2_Depth/mae_filter_cache.json'
+DISABLE_MAE_FILTER: false
+GLOBAL_CROPS_SCALE: [0.32, 1.0]
+LOCAL_CROPS_SCALE: [0.05, 0.32]
+LOCAL_CROPS_NUMBER: 8
+GLOBAL_CROPS_SIZE: 224
+LOCAL_CROPS_SIZE: 96

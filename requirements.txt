@@ -1,0 +1,12 @@
+albumentations
+hydra-core
+iopath
+numpy
+opencv-python
+omegaconf
+pillow
+PyYAML
+tqdm
+tensorboardX
+torch
+torchvision
