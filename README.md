@@ -96,6 +96,7 @@ checkpoints/
 ---
 
 ## 🚀 Train
+### Single GPU
 ```bash
 # 1. PSST warm-up stage, obtain an initial target-modality LoRA.
 python 1_PSST_warm.py --config configs\PSST_warm.yaml
@@ -103,6 +104,15 @@ python 1_PSST_warm.py --config configs\PSST_warm.yaml
 python 2_PSST_train.py --config configs\PSST_train.yaml
 # 3. Equip the target-modality LoRA and freeze it, then train on downstream tasks.
 python 3_TPMoME_train.py --config configs\mcubes_rgbad_sam2.yaml
+```
+### DDP
+```bash
+# 1. PSST warm-up stage, obtain an initial target-modality LoRA.
+torchrun --nproc_per_node=4 1_PSST_warm.py --config configs\PSST_warm.yaml
+# 2. Continue training the modality LoRA to obtain the trained target-modality LoRA.
+torchrun --nproc_per_node=4 2_PSST_train.py --config configs\PSST_train.yaml
+# 3. Equip the target-modality LoRA and freeze it, then train on downstream tasks.
+torchrun --nproc_per_node=4 3_TPMoME_train.py --config configs\mcubes_rgbad_sam2.yaml
 ```
 ---
 
