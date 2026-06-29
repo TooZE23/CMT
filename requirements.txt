@@ -1,4 +1,6 @@
 albumentations
+einops
+fvcore
 hydra-core
 iopath
 numpy
@@ -7,6 +9,7 @@ omegaconf
 pillow
 PyYAML
 tqdm
+tabulate
 tensorboardX
 torch
 torchvision
